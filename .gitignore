@@ -1,0 +1,4 @@
+config/database.php
+.env
+uploads/
+node_modules/
