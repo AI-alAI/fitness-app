@@ -1,9 +1,8 @@
 <?php
 session_start();
-require_once '../config/database.php';
-require_once '../include/functions.php';
+require_once 'config/database.php';
 
-if (!isLoggedIn()) {
+if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'Non autorisé']);
     exit();
 }
@@ -12,7 +11,6 @@ $database = new Database();
 $db = $database->getConnection();
 
 $user_id = $_SESSION['user_id'];
-$role = $_SESSION['role'];
 $other_id = isset($_GET['other_id']) ? intval($_GET['other_id']) : 0;
 $last_id = isset($_GET['last_id']) ? intval($_GET['last_id']) : 0;
 
@@ -21,13 +19,15 @@ if (!$other_id) {
     exit();
 }
 
-// Get new messages (sent by other user to current user, or current user to other user)
-// We'll fetch messages with id > last_id and where (expediteur = current & destinataire = other) OR (expediteur = other & destinataire = current)
-$query = "SELECT m.*, u1.nom as exp_nom, u1.prenom as exp_prenom, u2.nom as dest_nom, u2.prenom as dest_prenom
+// Get messages after last_id
+$query = "SELECT m.*, 
+          u1.nom as exp_nom, u1.prenom as exp_prenom,
+          u2.nom as dest_nom, u2.prenom as dest_prenom
           FROM messages m
           JOIN utilisateurs u1 ON m.id_expediteur = u1.id_utilisateur
           JOIN utilisateurs u2 ON m.id_destinataire = u2.id_utilisateur
-          WHERE ((m.id_expediteur = :user AND m.id_destinataire = :other) OR (m.id_expediteur = :other AND m.id_destinataire = :user))
+          WHERE ((m.id_expediteur = :user AND m.id_destinataire = :other) 
+              OR (m.id_expediteur = :other AND m.id_destinataire = :user))
           AND m.id_message > :last_id
           ORDER BY m.date_envoi ASC";
 $stmt = $db->prepare($query);

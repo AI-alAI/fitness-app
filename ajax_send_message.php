@@ -1,9 +1,8 @@
 <?php
 session_start();
-require_once '../config/database.php';
-require_once '../include/functions.php';
+require_once 'config/database.php';
 
-if (!isLoggedIn()) {
+if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'Non autorisé']);
     exit();
 }
@@ -20,12 +19,28 @@ if (!$destinataire_id || empty($contenu)) {
     exit();
 }
 
-$query = "INSERT INTO messages (id_expediteur, id_destinataire, contenu, date_envoi) VALUES (:exp, :dest, :contenu, NOW())";
+$query = "INSERT INTO messages (id_expediteur, id_destinataire, contenu, date_envoi, lu) 
+          VALUES (:exp, :dest, :contenu, NOW(), 0)";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':exp', $user_id);
 $stmt->bindParam(':dest', $destinataire_id);
 $stmt->bindParam(':contenu', $contenu);
 $stmt->execute();
 
-echo json_encode(['success' => true]);
+$new_id = $db->lastInsertId();
+
+// Return the new message data
+$query2 = "SELECT m.*, 
+           u1.nom as exp_nom, u1.prenom as exp_prenom,
+           u2.nom as dest_nom, u2.prenom as dest_prenom
+           FROM messages m
+           JOIN utilisateurs u1 ON m.id_expediteur = u1.id_utilisateur
+           JOIN utilisateurs u2 ON m.id_destinataire = u2.id_utilisateur
+           WHERE m.id_message = :id";
+$stmt2 = $db->prepare($query2);
+$stmt2->bindParam(':id', $new_id);
+$stmt2->execute();
+$message = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+echo json_encode($message);
 ?>
