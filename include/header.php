@@ -46,6 +46,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../admin/exercices.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
                         <i class="fas fa-dumbbell w-5"></i><span>Exercices</span>
                     </a>
+                    <a href="../admin/programmes.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
+                        <i class="fas fa-clipboard-list w-5"></i><span>Programmes</span>
+                    </a>
+                    <a href="../admin/messages.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
+                        <i class="fas fa-envelope w-5"></i><span>Messages</span>
+                    </a>
                 <?php elseif ($current_role == 'coach'): ?>
                     <a href="../coach/dashboard_coach.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard_coach.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>

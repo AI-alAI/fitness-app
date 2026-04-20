@@ -1,5 +1,5 @@
 <?php
-// auth/register.php
+// auth/register_coach.php
 require_once '../config/database.php';
 require_once '../include/functions.php';
 
@@ -16,16 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = $_POST['prenom'] ?? '';
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $confirm = $_POST['confirm_password'] ?? '';
+    $specialite = $_POST['specialite'] ?? '';
+    $bio = $_POST['bio'] ?? '';
     $age = $_POST['age'] ?? null;
-    $poids = $_POST['poids'] ?? null;
-    $taille = $_POST['taille'] ?? null;
-    $niveau = $_POST['niveau'] ?? 'debutant';
+    $niveau = $_POST['niveau'] ?? 'avance';
 
     if (empty($nom) || empty($prenom) || empty($email) || empty($password)) {
         $error = "Tous les champs obligatoires doivent être remplis";
-    } elseif ($password !== $confirm_password) {
-        $error = "Les mots de passe ne correspondent pas";
+    } elseif ($password !== $confirm) {
+        $error = "Mots de passe différents";
     } else {
         $database = new Database();
         $db = $database->getConnection();
@@ -33,26 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $check = $db->prepare("SELECT id_utilisateur FROM utilisateurs WHERE email = :email");
         $check->bindParam(':email', $email);
         $check->execute();
-
         if ($check->rowCount() > 0) {
-            $error = "Cet email est déjà utilisé";
+            $error = "Email déjà utilisé";
         } else {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, age, poids, taille, niveau, role, date_inscription) 
-                      VALUES (:nom, :prenom, :email, :password, :age, :poids, :taille, :niveau, 'utilisateur', NOW())";
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $query = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, age, niveau, role, date_inscription) 
+                      VALUES (:nom, :prenom, :email, :pwd, :age, :niveau, 'coach', NOW())";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':prenom', $prenom);
             $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashed_password);
+            $stmt->bindParam(':pwd', $hash);
             $stmt->bindParam(':age', $age);
-            $stmt->bindParam(':poids', $poids);
-            $stmt->bindParam(':taille', $taille);
             $stmt->bindParam(':niveau', $niveau);
             if ($stmt->execute()) {
-                $success = "Inscription réussie ! <a href='login_user.php'>Se connecter</a>";
+                $userId = $db->lastInsertId();
+                $stmt2 = $db->prepare("INSERT INTO coachs (id_utilisateur, specialite, bio) VALUES (:id, :spec, :bio)");
+                $stmt2->bindParam(':id', $userId);
+                $stmt2->bindParam(':spec', $specialite);
+                $stmt2->bindParam(':bio', $bio);
+                $stmt2->execute();
+                $success = "Inscription coach réussie ! <a href='login_coach.php'>Connectez-vous</a>";
             } else {
-                $error = "Une erreur est survenue lors de l'inscription";
+                $error = "Erreur lors de l'inscription";
             }
         }
     }
@@ -62,16 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Inscription - Smart Fitness</title>
+    <title>Inscription Coach - Smart Fitness</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;}</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>body{background:linear-gradient(135deg,#1e3c2c 0%,#2a5a3a 100%);min-height:100vh;}</style>
 </head>
 <body class="flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8">
         <div class="text-center mb-8">
-            <i class="fas fa-user-plus text-4xl text-purple-600 mb-2"></i>
-            <h1 class="text-3xl font-bold">Créer un compte</h1>
+            <i class="fas fa-chalkboard-user text-4xl text-green-600 mb-2"></i>
+            <h1 class="text-3xl font-bold">Devenir Coach</h1>
         </div>
         <?php if ($error): ?><div class="bg-red-100 text-red-700 p-3 rounded mb-4"><?php echo $error; ?></div><?php endif; ?>
         <?php if ($success): ?><div class="bg-green-100 text-green-700 p-3 rounded mb-4"><?php echo $success; ?></div><?php endif; ?>
@@ -83,19 +86,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div><input type="password" name="password" placeholder="Mot de passe" required class="w-full p-3 border rounded"></div>
                 <div><input type="password" name="confirm_password" placeholder="Confirmer" required class="w-full p-3 border rounded"></div>
                 <div><input type="number" name="age" placeholder="Âge" class="w-full p-3 border rounded"></div>
-                <div><input type="number" step="0.1" name="poids" placeholder="Poids (kg)" class="w-full p-3 border rounded"></div>
-                <div><input type="number" step="0.1" name="taille" placeholder="Taille (cm)" class="w-full p-3 border rounded"></div>
                 <div>
                     <select name="niveau" class="w-full p-3 border rounded">
                         <option value="debutant">Débutant</option>
                         <option value="intermediaire">Intermédiaire</option>
-                        <option value="avance">Avancé</option>
+                        <option value="avance" selected>Avancé</option>
                     </select>
                 </div>
+                <div class="md:col-span-2"><input type="text" name="specialite" placeholder="Spécialité (ex: Musculation)" class="w-full p-3 border rounded"></div>
+                <div class="md:col-span-2"><textarea name="bio" rows="2" placeholder="Bio / Présentation" class="w-full p-3 border rounded"></textarea></div>
             </div>
-            <button type="submit" class="w-full mt-6 bg-purple-600 text-white py-3 rounded hover:bg-purple-700">S'inscrire</button>
+            <button type="submit" class="w-full mt-6 bg-green-600 text-white py-3 rounded hover:bg-green-700">S'inscrire</button>
         </form>
-        <div class="text-center mt-4">Déjà un compte ? <a href="login_user.php" class="text-purple-600">Se connecter</a></div>
+        <div class="text-center mt-4">Déjà coach ? <a href="login_coach.php" class="text-green-600">Se connecter</a></div>
     </div>
 </body>
 </html>
