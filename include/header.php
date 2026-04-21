@@ -77,6 +77,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../coach/gestion_exercices.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'gestion_exercices.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-dumbbell w-5"></i><span>Gérer exercices</span>
                     </a>
+                    <a href="../coach/profil.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'profil.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-user-circle w-5"></i><span>Mon profil</span>
+                    </a>
                 <?php elseif ($current_role == 'utilisateur'): ?>
                     <a href="../utilisateur/dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>
@@ -98,6 +101,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                     <a href="../utilisateur/messages.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'messages.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-envelope w-5"></i><span>Messages</span>
+                    </a>
+                    <a href="../utilisateur/profil.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'profil.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-user-circle w-5"></i><span>Mon profil</span>
                     </a>
                 <?php endif; ?>
             </nav>
