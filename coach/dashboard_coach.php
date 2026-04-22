@@ -1,4 +1,5 @@
 <?php
+// coach/dashboard_coach.php
 require_once '../config/database.php';
 require_once '../include/functions.php';
 redirectIfNotRole(['coach', 'admin']);
@@ -70,7 +71,6 @@ foreach ($programme_calories as $pc) {
     $pie_data[] = $pc['calories_programme'];
 }
 
-// Si aucune donnée, on met un message par défaut
 if (empty($pie_labels)) {
     $pie_labels = ['Aucune donnée'];
     $pie_data = [1];
@@ -147,11 +147,15 @@ include '../include/header.php';
     </div>
 </div>
 
-<!-- Camembert (répartition des calories par programme) -->
+<!-- Camembert (répartition des calories par programme) - plus petit et centré -->
 <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-    <h2 class="text-xl font-bold text-gray-800 mb-4">Calories brûlées par programme</h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Calories brûlées par programme</h2>
     <?php if (count($programme_calories) > 0): ?>
-        <canvas id="caloriesPieChart" height="250"></canvas>
+        <div class="flex justify-center">
+            <div class="max-w-sm w-full">
+                <canvas id="caloriesPieChart" height="200"></canvas>
+            </div>
+        </div>
     <?php else: ?>
         <p class="text-gray-500 text-center py-8">Aucune donnée de séance disponible pour vos programmes.</p>
     <?php endif; ?>
