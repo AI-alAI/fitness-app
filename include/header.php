@@ -16,6 +16,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <style>
+        /* Flexible layout – no fixed height, grows with content */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         .sidebar-item { transition: all 0.3s ease; }
         .sidebar-item:hover { transform: translateX(5px); background-color: rgba(255,255,255,0.1); }
         .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -24,15 +30,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </style>
 </head>
 <body class="bg-gray-100">
-<div class="flex h-screen">
-    <!-- Sidebar -->
-    <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white shadow-xl flex flex-col">
-        <div class="p-6">
+<div class="flex flex-1">
+    <!-- Sidebar – full height, sticky -->
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-indigo-900 text-white shadow-xl flex flex-col min-h-screen">
+        <div class="p-6 flex-1">
             <div class="flex items-center space-x-3 mb-8">
                 <i class="fas fa-dumbbell text-2xl"></i>
                 <h1 class="text-xl font-bold">Smart Fitness</h1>
             </div>
             <nav class="space-y-2">
+                <!-- Admin menu -->
                 <?php if ($current_role == 'admin'): ?>
                     <a href="../admin/dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Dashboard Admin</span>
@@ -52,6 +59,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../admin/messages.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
                         <i class="fas fa-envelope w-5"></i><span>Messages</span>
                     </a>
+                    <a href="../admin/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
+                        <i class="fas fa-ticket-alt w-5"></i><span>Réclamations</span>
+                    </a>
+                <!-- Coach menu -->
                 <?php elseif ($current_role == 'coach'): ?>
                     <a href="../coach/dashboard_coach.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard_coach.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>
@@ -80,6 +91,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../coach/profil.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'profil.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-user-circle w-5"></i><span>Mon profil</span>
                     </a>
+                    <a href="../coach/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'reclamations.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-exclamation-circle w-5"></i><span>Réclamations</span>
+                    </a>
+                <!-- User menu -->
                 <?php elseif ($current_role == 'utilisateur'): ?>
                     <a href="../utilisateur/dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>
@@ -105,10 +120,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../utilisateur/profil.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'profil.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-user-circle w-5"></i><span>Mon profil</span>
                     </a>
+                    <a href="../utilisateur/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'reclamations.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-exclamation-circle w-5"></i><span>Réclamations</span>
+                    </a>
                 <?php endif; ?>
             </nav>
         </div>
-        <div class="mt-auto p-6 border-t border-purple-700">
+        <!-- Logout section at bottom -->
+        <div class="p-6 border-t border-purple-700">
             <div class="flex items-center space-x-3 mb-3">
                 <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center"><i class="fas fa-user"></i></div>
                 <div><p class="text-sm font-semibold"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Invité'); ?></p><p class="text-xs text-purple-300"><?php echo ucfirst($current_role); ?></p></div>
@@ -116,4 +135,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="../auth/logout.php" class="flex items-center space-x-3 text-purple-300 hover:text-white transition"><i class="fas fa-sign-out-alt"></i><span>Déconnexion</span></a>
         </div>
     </div>
-    <div class="flex-1 overflow-auto"><div class="p-8">
+    <!-- Main content – flexible, grows with content -->
+    <div class="flex-1">
+        <div class="p-8">

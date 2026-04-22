@@ -1,8 +1,8 @@
 <?php
-// utilisateur/reclamations.php
+// coach/reclamations.php
 require_once '../config/database.php';
 require_once '../include/functions.php';
-redirectIfNotRole(['utilisateur']);
+redirectIfNotRole(['coach', 'admin']);
 
 $database = new Database();
 $db = $database->getConnection();
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_reclamation'])
     }
 }
 
-// Fetch user's complaints
+// Fetch coach's complaints
 $stmt = $db->prepare("SELECT * FROM reclamations WHERE id_utilisateur = :user ORDER BY date_creation DESC");
 $stmt->bindParam(':user', $user_id);
 $stmt->execute();
