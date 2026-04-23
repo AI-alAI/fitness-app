@@ -123,6 +123,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../utilisateur/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'reclamations.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-exclamation-circle w-5"></i><span>Réclamations</span>
                     </a>
+                    <a href="../utilisateur/ai_chat.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
+    <i class="fas fa-robot w-5"></i><span>Coach IA</span>
+</a>
                 <?php endif; ?>
             </nav>
         </div>

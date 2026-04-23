@@ -1,4 +1,20 @@
-config/database.php
+# env file
 .env
+
+# vendor (composer)
+vendor/
+
+# uploads
 uploads/
-node_modules/
+uploads/profiles/
+uploads/videos/
+
+# logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
