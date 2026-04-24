@@ -9,11 +9,7 @@ $db = $database->getConnection();
 $uploadDir = '../uploads/videos/';
 if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-// Helper function for YouTube embed
-function getYouTubeEmbedUrl($url) {
-    preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $url, $matches);
-    return isset($matches[1]) ? 'https://www.youtube.com/embed/' . $matches[1] : null;
-}
+// getYouTubeEmbedUrl() is already defined in functions.php, so no local declaration needed.
 
 // Get coach ID (for programme filtering)
 $stmt = $db->prepare("SELECT id_coach FROM coachs WHERE id_utilisateur = :user");
@@ -214,7 +210,7 @@ include '../include/header.php';
                                 <source src="../<?php echo $video; ?>" type="video/mp4">
                             </video>
                         <?php else:
-                            $embed = getYouTubeEmbedUrl($video);
+                            $embed = getYouTubeEmbedUrl($video); // Uses function from functions.php
                             if ($embed): ?>
                                 <div class="relative pb-[56.25%] h-0 rounded-lg overflow-hidden">
                                     <iframe class="absolute top-0 left-0 w-full h-full" src="<?php echo $embed; ?>" frameborder="0" allowfullscreen></iframe>
