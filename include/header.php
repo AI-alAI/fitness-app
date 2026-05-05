@@ -39,8 +39,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <h1 class="text-xl font-bold">Smart Fitness</h1>
             </div>
             <nav class="space-y-2">
-                <!-- Admin menu -->
                 <?php if ($current_role == 'admin'): ?>
+                    <!-- Admin menu -->
                     <a href="../admin/dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Dashboard Admin</span>
                     </a>
@@ -62,8 +62,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../admin/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
                         <i class="fas fa-ticket-alt w-5"></i><span>Réclamations</span>
                     </a>
-                <!-- Coach menu -->
                 <?php elseif ($current_role == 'coach'): ?>
+                    <!-- Coach menu -->
                     <a href="../coach/dashboard_coach.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard_coach.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>
                     </a>
@@ -94,8 +94,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../coach/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'reclamations.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-exclamation-circle w-5"></i><span>Réclamations</span>
                     </a>
-                <!-- User menu -->
                 <?php elseif ($current_role == 'utilisateur'): ?>
+                    <!-- User menu -->
                     <a href="../utilisateur/dashboard.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'dashboard.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-tachometer-alt w-5"></i><span>Tableau de bord</span>
                     </a>
@@ -123,9 +123,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <a href="../utilisateur/reclamations.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'reclamations.php') ? 'active-sidebar' : ''; ?>">
                         <i class="fas fa-exclamation-circle w-5"></i><span>Réclamations</span>
                     </a>
-                    <a href="../utilisateur/ai_chat.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition">
-    <i class="fas fa-robot w-5"></i><span>Coach IA</span>
-</a>
+                    <a href="../utilisateur/ai_chat.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'ai_chat.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-robot w-5"></i><span>Coach IA</span>
+                    </a>
+                    <!-- NEW WORKOUT LINKS -->
+                    <a href="../utilisateur/workout_log.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'workout_log.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-plus-circle w-5"></i><span>Ajouter workout</span>
+                    </a>
+                    <a href="../utilisateur/workout_history.php" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg transition <?php echo ($current_page == 'workout_history.php') ? 'active-sidebar' : ''; ?>">
+                        <i class="fas fa-history w-5"></i><span>Historique</span>
+                    </a>
                 <?php endif; ?>
             </nav>
         </div>
